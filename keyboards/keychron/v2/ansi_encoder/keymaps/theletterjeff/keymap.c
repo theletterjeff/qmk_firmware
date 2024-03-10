@@ -68,11 +68,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,  KC_LWIN,  KC_LALT,  _______,  _______,  _______,  _______,  _______,  _______,  _______),
 
     [FN] = LAYOUT_ansi_67(
-        KC_GRV,   KC_F1,    KC_F2,    KC_F3,         KC_F4,       KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,     KC_F10,           KC_F11,   KC_F12,   XXXXXXX,  _______,
-        XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,       XXXXXXX,     XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   KC_PRINT_SCREEN,  XXXXXXX,  XXXXXXX,  KC_DEL,   XXXXXXX,
-        _______,  XXXXXXX,  XXXXXXX,  KC_HOME,       KC_END,      XXXXXXX,  KC_LEFT,  KC_DOWN,  KC_UP,    KC_RIGHT,  XXXXXXX,          XXXXXXX,  _______,  XXXXXXX,
-        KC_LSFT,  XXXXXXX,  XXXXXXX,  KC_PAGE_DOWN,  KC_PAGE_UP,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,          XXXXXXX,  XXXXXXX,
-        _______,  XXXXXXX,  XXXXXXX,  XXXXXXX,       XXXXXXX,     XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX),
+        KC_GRV,   KC_F1,    KC_F2,    KC_F3,       KC_F4,         KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,     KC_F10,           KC_F11,   KC_F12,   XXXXXXX,  _______,
+        XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,     XXXXXXX,       XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   KC_PRINT_SCREEN,  XXXXXXX,  XXXXXXX,  KC_DEL,   XXXXXXX,
+        _______,  XXXXXXX,  XXXXXXX,  KC_HOME,     KC_END,        XXXXXXX,  KC_LEFT,  KC_DOWN,  KC_UP,    KC_RIGHT,  XXXXXXX,          XXXXXXX,  _______,  XXXXXXX,
+        KC_LSFT,  XXXXXXX,  XXXXXXX,  KC_PAGE_UP,  KC_PAGE_DOWN,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,          XXXXXXX,  XXXXXXX,
+        _______,  XXXXXXX,  XXXXXXX,  XXXXXXX,     XXXXXXX,       XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX),
 
     [MEDIA] = LAYOUT_ansi_67(
         KC_SYSTEM_POWER,  KC_BRID,   KC_BRIU,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  KC_MPRV,  KC_MPLY,  KC_MNXT,   XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  QK_BOOTLOADER,
