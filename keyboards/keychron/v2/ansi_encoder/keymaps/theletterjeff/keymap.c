@@ -16,22 +16,49 @@
 
 #include QMK_KEYBOARD_H
 
-// clang-format off
+enum custom_keycodes{
+    CTL_TG_FN = SAFE_RANGE,
+};
 
 enum layers{
     MAC_BASE,
     WIN_BASE,
-    _FN1,
-    _FN2,
+    FN,
+    MEDIA,
 };
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    static uint32_t key_timer;
+
+    switch (keycode) {
+        // Tap to switch to FN layer; hold for CTL
+        case CTL_TG_FN:
+            if (record->event.pressed) {
+                key_timer = timer_read32();
+                uprintf("timer_read: %5lu\n", key_timer);
+                register_mods(MOD_BIT(KC_LCTL));
+
+            } else {
+                unregister_mods(MOD_BIT(KC_LCTL));
+                uprintf("timer_elapsed: %5lu\n", timer_elapsed32(key_timer));
+                if (timer_elapsed32(key_timer) < TAPPING_TERM) {
+                    layer_invert(FN);
+                }
+            }
+            break;
+
+        return false;
+    }
+    return true;
+}
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MAC_BASE] = LAYOUT_ansi_67(
         KC_ESC,                KC_1,     KC_2,     KC_3,    KC_4,     KC_5,     KC_6,     KC_7,     KC_8,     KC_9,      KC_0,     KC_MINS,  KC_EQL,   KC_BSLS,  KC_MUTE,
         KC_TAB,                KC_Q,     KC_W,     KC_E,    KC_R,     KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,      KC_P,     KC_LBRC,  KC_RBRC,  KC_BSPC,  XXXXXXX,
-        LCTL_T(TG(_FN1)),      KC_A,     KC_S,     KC_D,    KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,      KC_SCLN,  KC_QUOT,  KC_ENT,   XXXXXXX,
+        CTL_TG_FN,             KC_A,     KC_S,     KC_D,    KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,      KC_SCLN,  KC_QUOT,  KC_ENT,   XXXXXXX,
         LSFT_T(KC_CAPS_LOCK),  KC_Z,     KC_X,     KC_C,    KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,    KC_SLSH,  KC_RSFT,  XXXXXXX,
-        TG(_FN2),              KC_LOPT,  KC_LCMD,  KC_SPC,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX),
+        TG(MEDIA),             KC_LOPT,  KC_LCMD,  KC_SPC,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX),
 
     [WIN_BASE] = LAYOUT_ansi_67(
         _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,   _______,  _______,  _______,  _______,  _______,
@@ -40,26 +67,26 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,   _______,  _______,  _______,
         _______,  KC_LWIN,  KC_LALT,  _______,  _______,  _______,  _______,  _______,  _______,  _______),
 
-    [_FN1] = LAYOUT_ansi_67(
-        KC_GRV,                KC_F1,    KC_F2,    KC_F3,         KC_F4,       KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,     KC_F10,           KC_F11,   KC_F12,   _______,  _______,
-        _______,               _______,  _______,  _______,       _______,     _______,  _______,  _______,  _______,  _______,   KC_PRINT_SCREEN,  _______,  _______,  KC_DEL,   _______,
-        LCTL_T(TG(MAC_BASE)),  _______,  _______,  HOME,          END,         _______,  KC_LEFT,  KC_DOWN,  KC_UP,    KC_RIGHT,  _______,          _______,  _______,  _______,
-        _______,               _______,  _______,  KC_PAGE_DOWN,  KC_PAGE_UP,  _______,  _______,  _______,  _______,  _______,   _______,          _______,  _______,
-        _______,               _______,  _______,  _______,       _______,     _______,  _______,  _______,  _______,  _______),
+    [FN] = LAYOUT_ansi_67(
+        KC_GRV,   KC_F1,    KC_F2,    KC_F3,         KC_F4,       KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,     KC_F10,           KC_F11,   KC_F12,   XXXXXXX,  _______,
+        XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,       XXXXXXX,     XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   KC_PRINT_SCREEN,  XXXXXXX,  XXXXXXX,  KC_DEL,   XXXXXXX,
+        _______,  XXXXXXX,  XXXXXXX,  KC_HOME,       KC_END,      XXXXXXX,  KC_LEFT,  KC_DOWN,  KC_UP,    KC_RIGHT,  XXXXXXX,          XXXXXXX,  _______,  XXXXXXX,
+        KC_LSFT,  XXXXXXX,  XXXXXXX,  KC_PAGE_DOWN,  KC_PAGE_UP,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,          XXXXXXX,  XXXXXXX,
+        _______,  XXXXXXX,  XXXXXXX,  XXXXXXX,       XXXXXXX,     XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX),
 
-    [_FN2] = LAYOUT_ansi_67(
-        KC_SYSTEM_POWER,  KC_BRID,   KC_BRIU,  _______,  _______,  _______,  _______,  KC_MPRV,  KC_MPLY,  KC_MNXT,  _______,  _______,  _______,  _______,  _______,
-        RGB_TOG,          RGB_MOD,   RGB_VAI,  RGB_HUI,  RGB_SAI,  RGB_SPI,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,
-        _______,          RGB_RMOD,  RGB_VAD,  RGB_HUD,  RGB_SAD,  RGB_SPD,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,
-        _______,          _______,   _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,
-        TG(MAC_BASE),     _______,   _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______)
+    [MEDIA] = LAYOUT_ansi_67(
+        KC_SYSTEM_POWER,  KC_BRID,   KC_BRIU,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  KC_MPRV,  KC_MPLY,  KC_MNXT,   XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  QK_BOOTLOADER,
+        RGB_TOG,          RGB_MOD,   RGB_VAI,  RGB_HUI,  RGB_SAI,  RGB_SPI,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,
+        _______,          RGB_RMOD,  RGB_VAD,  RGB_HUD,  RGB_SAD,  RGB_SPD,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,  XXXXXXX,  _______,  XXXXXXX,
+        _______,          XXXXXXX,   XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,   XXXXXXX,  XXXXXXX,  XXXXXXX,
+        _______,          XXXXXXX,   XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX),
 };
 
 #if defined(ENCODER_MAP_ENABLE)
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [MAC_BASE] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU)},
     [WIN_BASE] = { ENCODER_CCW_CW(_______, _______)},
-    [_FN1]   = { ENCODER_CCW_CW(_______, _______)},
-    [_FN2]   = { ENCODER_CCW_CW(_______, _______)}
+    [FN]       = { ENCODER_CCW_CW(_______, _______)},
+    [MEDIA]    = { ENCODER_CCW_CW(_______, _______)},
 };
 #endif // ENCODER_MAP_ENABLE
