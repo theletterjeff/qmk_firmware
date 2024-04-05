@@ -22,5 +22,5 @@
 /* Enable caps-lock LED */
 #define CAPS_LOCK_LED_INDEX 30
 
-#define TAPPING_TERM 150
+#define TAPPING_TERM 200
 #define HOLD_ON_OTHER_KEY_PRESS
